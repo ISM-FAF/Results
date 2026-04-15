@@ -235,31 +235,36 @@
 
     .badge {
       display: inline-block;
-      padding: 6px 10px;
+      padding: 7px 12px;
       border-radius: 999px;
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       font-weight: 800;
       margin-top: 4px;
+      letter-spacing: 0.01em;
     }
 
     .badge-superior {
-      background: var(--superior-bg);
-      color: var(--superior-text);
+      background: #dff7e5;
+      color: #14532d;
+      border: 1px solid #b7e4c2;
     }
 
     .badge-excellent {
-      background: var(--excellent-bg);
-      color: var(--excellent-text);
+      background: #fff0dc;
+      color: #9a5c00;
+      border: 1px solid #f3d19c;
     }
 
     .badge-good {
-      background: var(--good-bg);
-      color: var(--good-text);
+      background: #efe7ff;
+      color: #6d3ea2;
+      border: 1px solid #d6c2f5;
     }
 
     .badge-default {
       background: #ece7e4;
       color: #5b4b45;
+      border: 1px solid #d9cfca;
     }
 
     .empty-state {
@@ -307,13 +312,20 @@
       font-size: 1rem;
       padding: 12px 14px;
       border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
       border-radius: 14px;
       margin: 16px 0 10px 0;
       position: sticky;
       top: 8px;
       z-index: 10;
       box-shadow: 0 4px 10px rgba(120, 70, 45, 0.08);
-      border-left: 4px solid var(--accent);
+    }
+
+    .category-subtext {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -534,11 +546,17 @@
 
         if (category !== currentCategory) {
           currentCategory = category;
+
+          const categoryCount = filtered.filter(item =>
+            (item["Category"] || "Uncategorized") === currentCategory
+          ).length;
+
           html += `
-      <div class="category-header">
-        ${escapeHtml(currentCategory)}
-      </div>
-    `;
+    <div class="category-header">
+      <div>${escapeHtml(currentCategory)}</div>
+      <div class="category-subtext">Showing ${categoryCount} result${categoryCount === 1 ? "" : "s"}</div>
+    </div>
+  `;
         }
 
         html += `
