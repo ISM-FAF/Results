@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -300,6 +301,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <section class="hero">
@@ -324,11 +326,7 @@
 
       <div class="filter-grid">
         <div class="full">
-          <input
-            type="text"
-            id="searchBox"
-            placeholder="Name or Group Name..."
-          />
+          <input type="text" id="searchBox" placeholder="Name or Group Name..." />
           <div class="search-help">
             Search by participant name, group name, city, church, or category.
           </div>
@@ -336,8 +334,8 @@
 
         <div>
           <select id="churchFilter">
-  <option value="">All Churches (by City)</option>
-</select>
+            <option value="">All Churches (by City)</option>
+          </select>
         </div>
 
         <div>
@@ -433,8 +431,8 @@
       const churches = [...new Set(
         allData.map(row => buildChurchLabel(row))
       )]
-      .filter(churchLabel => churchLabel !== "")
-      .sort((a, b) => a.localeCompare(b));
+        .filter(churchLabel => churchLabel !== "")
+        .sort((a, b) => a.localeCompare(b));
 
       churchFilter.innerHTML = `<option value="">All Churches (by City)</option>`;
 
@@ -487,8 +485,16 @@
       });
 
       filtered.sort((a, b) => {
+        const categoryA = (a["Category"] || "").toLowerCase();
+        const categoryB = (b["Category"] || "").toLowerCase();
+
+        if (categoryA !== categoryB) {
+          return categoryA.localeCompare(categoryB);
+        }
+
         const nameA = (a["Name"] || "").toLowerCase();
         const nameB = (b["Name"] || "").toLowerCase();
+
         return nameA.localeCompare(nameB);
       });
 
@@ -554,4 +560,5 @@
     loadCSV();
   </script>
 </body>
+
 </html>
