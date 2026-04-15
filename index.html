@@ -299,6 +299,17 @@
         font-size: 2.4rem;
       }
     }
+
+    .category-header {
+      background: #f7ebe5;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin: 16px 0 10px 0;
+    }
   </style>
 </head>
 
@@ -510,30 +521,48 @@
         return;
       }
 
-      resultsContainer.innerHTML = filtered.map(row => `
-        <div class="result-card">
-          <div class="result-name">${escapeHtml(row["Name"] || "")}</div>
+      let html = "";
+      let currentCategory = "";
 
-          <div class="result-grid">
-            <div class="result-row">
-              <span class="label">Church:</span><br>
-              ${escapeHtml(buildChurchLabel(row))}
-            </div>
+      filtered.forEach(row => {
+        const category = row["Category"] || "Uncategorized";
 
-            <div class="result-row">
-              <span class="label">Category:</span><br>
-              ${escapeHtml(row["Category"] || "")}
-            </div>
+        if (category !== currentCategory) {
+          currentCategory = category;
+          html += `
+      <div class="category-header">
+        ${escapeHtml(currentCategory)}
+      </div>
+    `;
+        }
 
-            <div class="result-row">
-              <span class="label">Rating:</span><br>
-              <span class="${getBadgeClass(row["Rating"])}">
-                ${escapeHtml(row["Rating"] || "")}
-              </span>
-            </div>
-          </div>
+        html += `
+    <div class="result-card">
+      <div class="result-name">${escapeHtml(row["Name"] || "")}</div>
+
+      <div class="result-grid">
+        <div class="result-row">
+          <span class="label">Church:</span><br>
+          ${escapeHtml(buildChurchLabel(row))}
         </div>
-      `).join("");
+
+        <div class="result-row">
+          <span class="label">Category:</span><br>
+          ${escapeHtml(row["Category"] || "")}
+        </div>
+
+        <div class="result-row">
+          <span class="label">Rating:</span><br>
+          <span class="${getBadgeClass(row["Rating"])}">
+            ${escapeHtml(row["Rating"] || "")}
+          </span>
+        </div>
+      </div>
+    </div>
+  `;
+      });
+
+      resultsContainer.innerHTML = html;
     }
 
     function escapeHtml(text) {
