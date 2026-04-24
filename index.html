@@ -327,13 +327,6 @@
       color: var(--muted);
       margin-top: 4px;
     }
-
-    .footer-credit {
-      display: block;
-      font-size: 0.75rem;
-      opacity: 0.8;
-      margin-top: 4px;
-    }
   </style>
 </head>
 
@@ -401,172 +394,172 @@
     </section>
 
     <div class="footer-note">
-      Mobile-friendly event results viewer<br>
-      <span class="footer-credit">Developed by Gen Tindall • Licensed for use</span>
+      Mobile-friendly event results viewer
     </div>
+  </div>
 
-    <script>
-      let allData = [];
+  <script>
+    let allData = [];
 
-      const searchBox = document.getElementById("searchBox");
-      const churchFilter = document.getElementById("churchFilter");
-      const ratingFilter = document.getElementById("ratingFilter");
-      const clearFilters = document.getElementById("clearFilters");
-      const resultsContainer = document.getElementById("resultsContainer");
-      const resultsCount = document.getElementById("resultsCount");
-      const statusMessage = document.getElementById("statusMessage");
+    const searchBox = document.getElementById("searchBox");
+    const churchFilter = document.getElementById("churchFilter");
+    const ratingFilter = document.getElementById("ratingFilter");
+    const clearFilters = document.getElementById("clearFilters");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const resultsCount = document.getElementById("resultsCount");
+    const statusMessage = document.getElementById("statusMessage");
 
-      function buildChurchLabel(row) {
-        const city = (row["City"] || "").trim();
-        const church = (row["Church"] || "").trim();
+    function buildChurchLabel(row) {
+      const city = (row["City"] || "").trim();
+      const church = (row["Church"] || "").trim();
 
-        if (city && church) return `${city} - ${church}`;
-        if (city) return city;
-        if (church) return church;
-        return "";
-      }
+      if (city && church) return `${city} - ${church}`;
+      if (city) return city;
+      if (church) return church;
+      return "";
+    }
 
-      function loadCSV() {
-        Papa.parse("results.csv", {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          complete: function (results) {
-            if (!results.data || results.data.length === 0) {
-              statusMessage.textContent = "No results were found in results.csv.";
-              resultsCount.textContent = "";
-              resultsContainer.innerHTML = `
+    function loadCSV() {
+      Papa.parse("results.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          if (!results.data || results.data.length === 0) {
+            statusMessage.textContent = "No results were found in results.csv.";
+            resultsCount.textContent = "";
+            resultsContainer.innerHTML = `
               <div class="empty-state">
                 No results available yet.
               </div>
             `;
-              return;
-            }
+            return;
+          }
 
-            allData = results.data;
-            statusMessage.textContent = "Results loaded.";
-            populateChurchDropdown();
-            displayResults();
-          },
-          error: function () {
-            statusMessage.textContent = "Could not load results.csv.";
-            resultsCount.textContent = "";
-            resultsContainer.innerHTML = `
+          allData = results.data;
+          statusMessage.textContent = "Results loaded.";
+          populateChurchDropdown();
+          displayResults();
+        },
+        error: function () {
+          statusMessage.textContent = "Could not load results.csv.";
+          resultsCount.textContent = "";
+          resultsContainer.innerHTML = `
             <div class="empty-state">
               Could not load results. Make sure results.csv is uploaded with this page.
             </div>
           `;
-          }
-        });
-      }
+        }
+      });
+    }
 
-      function populateChurchDropdown() {
-        const currentValue = churchFilter.value;
+    function populateChurchDropdown() {
+      const currentValue = churchFilter.value;
 
-        const churches = [...new Set(
-          allData.map(row => buildChurchLabel(row))
-        )]
-          .filter(churchLabel => churchLabel !== "")
-          .sort((a, b) => a.localeCompare(b));
+      const churches = [...new Set(
+        allData.map(row => buildChurchLabel(row))
+      )]
+        .filter(churchLabel => churchLabel !== "")
+        .sort((a, b) => a.localeCompare(b));
 
-        churchFilter.innerHTML = `<option value="">All Churches (by City)</option>`;
+      churchFilter.innerHTML = `<option value="">All Churches (by City)</option>`;
 
-        churches.forEach(churchLabel => {
-          const option = document.createElement("option");
-          option.value = churchLabel;
-          option.textContent = churchLabel;
-          churchFilter.appendChild(option);
-        });
+      churches.forEach(churchLabel => {
+        const option = document.createElement("option");
+        option.value = churchLabel;
+        option.textContent = churchLabel;
+        churchFilter.appendChild(option);
+      });
 
-        churchFilter.value = currentValue;
-      }
+      churchFilter.value = currentValue;
+    }
 
-      function getBadgeClass(rating) {
-        const value = (rating || "").toLowerCase().trim();
-        if (value === "superior") return "badge badge-superior";
-        if (value === "excellent") return "badge badge-excellent";
-        if (value === "good") return "badge badge-good";
-        return "badge badge-default";
-      }
+    function getBadgeClass(rating) {
+      const value = (rating || "").toLowerCase().trim();
+      if (value === "superior") return "badge badge-superior";
+      if (value === "excellent") return "badge badge-excellent";
+      if (value === "good") return "badge badge-good";
+      return "badge badge-default";
+    }
 
-      function displayResults() {
-        const searchValue = searchBox.value.toLowerCase().trim();
-        const churchValue = churchFilter.value.toLowerCase().trim();
-        const ratingValue = ratingFilter.value.toLowerCase().trim();
+    function displayResults() {
+      const searchValue = searchBox.value.toLowerCase().trim();
+      const churchValue = churchFilter.value.toLowerCase().trim();
+      const ratingValue = ratingFilter.value.toLowerCase().trim();
 
-        const filtered = allData.filter(row => {
-          const name = (row["Name"] || "").toLowerCase();
-          const church = (row["Church"] || "").toLowerCase();
-          const city = (row["City"] || "").toLowerCase();
-          const category = (row["Category"] || "").toLowerCase();
-          const rating = (row["Rating"] || "").toLowerCase();
-          const churchLabel = buildChurchLabel(row).toLowerCase();
+      const filtered = allData.filter(row => {
+        const name = (row["Name"] || "").toLowerCase();
+        const church = (row["Church"] || "").toLowerCase();
+        const city = (row["City"] || "").toLowerCase();
+        const category = (row["Category"] || "").toLowerCase();
+        const rating = (row["Rating"] || "").toLowerCase();
+        const churchLabel = buildChurchLabel(row).toLowerCase();
 
-          const matchesSearch =
-            !searchValue ||
-            name.includes(searchValue) ||
-            church.includes(searchValue) ||
-            city.includes(searchValue) ||
-            category.includes(searchValue) ||
-            churchLabel.includes(searchValue);
+        const matchesSearch =
+          !searchValue ||
+          name.includes(searchValue) ||
+          church.includes(searchValue) ||
+          city.includes(searchValue) ||
+          category.includes(searchValue) ||
+          churchLabel.includes(searchValue);
 
-          const matchesChurch =
-            !churchValue || churchLabel === churchValue;
+        const matchesChurch =
+          !churchValue || churchLabel === churchValue;
 
-          const matchesRating =
-            !ratingValue || rating === ratingValue;
+        const matchesRating =
+          !ratingValue || rating === ratingValue;
 
-          return matchesSearch && matchesChurch && matchesRating;
-        });
+        return matchesSearch && matchesChurch && matchesRating;
+      });
 
-        filtered.sort((a, b) => {
-          const categoryA = (a["Category"] || "").toLowerCase();
-          const categoryB = (b["Category"] || "").toLowerCase();
+      filtered.sort((a, b) => {
+        const categoryA = (a["Category"] || "").toLowerCase();
+        const categoryB = (b["Category"] || "").toLowerCase();
 
-          if (categoryA !== categoryB) {
-            return categoryA.localeCompare(categoryB);
-          }
+        if (categoryA !== categoryB) {
+          return categoryA.localeCompare(categoryB);
+        }
 
-          const nameA = (a["Name"] || "").toLowerCase();
-          const nameB = (b["Name"] || "").toLowerCase();
+        const nameA = (a["Name"] || "").toLowerCase();
+        const nameB = (b["Name"] || "").toLowerCase();
 
-          return nameA.localeCompare(nameB);
-        });
+        return nameA.localeCompare(nameB);
+      });
 
-        resultsCount.textContent =
-          `${filtered.length} result${filtered.length === 1 ? "" : "s"} found`;
+      resultsCount.textContent =
+        `${filtered.length} result${filtered.length === 1 ? "" : "s"} found`;
 
-        if (filtered.length === 0) {
-          resultsContainer.innerHTML = `
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = `
           <div class="empty-state">
             No matching results found.
           </div>
         `;
-          return;
-        }
+        return;
+      }
 
-        let html = "";
-        let currentCategory = "";
+      let html = "";
+      let currentCategory = "";
 
-        filtered.forEach(row => {
-          const category = row["Category"] || "Uncategorized";
+      filtered.forEach(row => {
+        const category = row["Category"] || "Uncategorized";
 
-          if (category !== currentCategory) {
-            currentCategory = category;
+        if (category !== currentCategory) {
+          currentCategory = category;
 
-            const categoryCount = filtered.filter(item =>
-              (item["Category"] || "Uncategorized") === currentCategory
-            ).length;
+          const categoryCount = filtered.filter(item =>
+            (item["Category"] || "Uncategorized") === currentCategory
+          ).length;
 
-            html += `
+          html += `
     <div class="category-header">
       <div>${escapeHtml(currentCategory)}</div>
       <div class="category-subtext">Showing ${categoryCount} result${categoryCount === 1 ? "" : "s"}</div>
     </div>
   `;
-          }
+        }
 
-          html += `
+        html += `
     <div class="result-card">
       <div class="result-name">${escapeHtml(row["Name"] || "")}</div>
 
@@ -590,34 +583,34 @@
       </div>
     </div>
   `;
-        });
+      });
 
-        resultsContainer.innerHTML = html;
-      }
+      resultsContainer.innerHTML = html;
+    }
 
-      function escapeHtml(text) {
-        return String(text)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-      function resetFilters() {
-        searchBox.value = "";
-        churchFilter.value = "";
-        ratingFilter.value = "";
-        displayResults();
-      }
+    function resetFilters() {
+      searchBox.value = "";
+      churchFilter.value = "";
+      ratingFilter.value = "";
+      displayResults();
+    }
 
-      searchBox.addEventListener("input", displayResults);
-      churchFilter.addEventListener("change", displayResults);
-      ratingFilter.addEventListener("change", displayResults);
-      clearFilters.addEventListener("click", resetFilters);
+    searchBox.addEventListener("input", displayResults);
+    churchFilter.addEventListener("change", displayResults);
+    ratingFilter.addEventListener("change", displayResults);
+    clearFilters.addEventListener("click", resetFilters);
 
-      loadCSV();
-    </script>
+    loadCSV();
+  </script>
 </body>
 
 </html>
